@@ -4,18 +4,38 @@ FROM gradle:8.5-jdk17-alpine AS build
 
 WORKDIR /app
 
-# Copy Gradle wrapper and build files first (for better caching)
-COPY gradle/ gradle/
-COPY gradlew build.gradle settings.gradle ./
+# Copy gradle wrapper script
+COPY gradlew ./
 RUN chmod +x gradlew
+
+# Copy build configuration files
+COPY build.gradle settings.gradle ./
+
+# Copy gradle wrapper configuration (if present)
+COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/ 2>/dev/null || \
+    (mkdir -p gradle/wrapper && \
+     echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties && \
+     echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties && \
+     echo "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.14.3-bin.zip" >> gradle/wrapper/gradle-wrapper.properties && \
+     echo "networkTimeout=10000" >> gradle/wrapper/gradle-wrapper.properties && \
+     echo "validateDistributionUrl=true" >> gradle/wrapper/gradle-wrapper.properties && \
+     echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties && \
+     echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties)
+
+# Copy gradle wrapper JAR if it exists, otherwise it will be downloaded
+COPY gradle/wrapper/gradle-wrapper.jar gradle/wrapper/ 2>/dev/null || echo "Wrapper JAR will be downloaded"
 
 # Copy source code
 COPY src/ src/
 
-# Build the application (skip tests, create executable JAR)
-# Using --no-daemon for Docker builds
-# Excluding frontend build for backend-only deployment
-RUN ./gradlew clean bootJar -x test --no-daemon -x buildFrontend
+# Build the application
+# Since we're in a gradle image, we have gradle installed
+# First, ensure wrapper is available (download if missing)
+RUN if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then \
+        echo "Downloading Gradle wrapper JAR..." && \
+        gradle wrapper --gradle-version 8.14.3 --no-daemon; \
+    fi && \
+    ./gradlew clean bootJar -x test --no-daemon -x buildFrontend
 
 # Verify JAR was created and show its name
 RUN ls -la build/libs/ && \
@@ -27,6 +47,9 @@ RUN ls -la build/libs/ && \
 FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
+
+# Install wget for health check
+RUN apk add --no-cache wget
 
 # Create non-root user for security
 RUN addgroup -S spring && adduser -S spring -G spring
