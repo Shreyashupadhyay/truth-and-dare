@@ -1,0 +1,61 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+*.iml
+.vscode
+*.swp
+*.swo
+*~
+
+# Build outputs
+build/
+bin/
+target/
+out/
+*.class
+*.jar
+*.war
+*.ear
+
+# Frontend (build separately or include if needed)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Gradle
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Documentation
+*.md
+!README.md
+
+# Scripts (not needed in Docker)
+*.sh
+*.bat
+*.ps1
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Test files
+test/
+
+# Temporary files
+tmp/
+temp/

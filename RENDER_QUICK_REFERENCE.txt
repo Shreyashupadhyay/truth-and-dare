@@ -1,0 +1,31 @@
+RENDER QUICK REFERENCE
+======================
+
+LANGUAGE:
+---------
+❌ Current: Node
+✅ Change to: Java
+
+BUILD COMMAND:
+--------------
+cd frontend && npm install && npm run build && cd .. && ./gradlew clean build -x test
+
+START COMMAND:
+--------------
+java -jar build/libs/*-SNAPSHOT.jar
+
+ENVIRONMENT VARIABLES:
+----------------------
+SPRING_PROFILES_ACTIVE=prod
+CORS_ALLOWED_ORIGINS=*
+
+HEALTH CHECK PATH:
+------------------
+/api/health
+
+OTHER SETTINGS:
+---------------
+Name: truth-and-dare (✓ correct)
+Branch: main (✓ correct)
+Region: Oregon (US West) (✓ correct)
+Root Directory: (leave empty)

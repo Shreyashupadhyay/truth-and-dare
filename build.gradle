@@ -41,6 +41,18 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// Ensure JAR is executable and includes all dependencies
+jar {
+	enabled = false
+	archiveClassifier = ''
+}
+
+// Create executable JAR
+bootJar {
+	archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
+	launchScript()
+}
+
 // Task to build frontend
 task buildFrontend(type: Exec) {
 	group = 'build'
