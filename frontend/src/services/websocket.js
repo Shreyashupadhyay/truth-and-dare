@@ -20,10 +20,32 @@ class WebSocketService {
       return
     }
 
-    // Use environment variable or default to relative path (same origin in production)
-    // Detect if we're on localhost for development
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    const wsUrl = import.meta.env.VITE_WS_URL || (isLocalhost ? 'http://localhost:8080/ws' : '/ws')
+    // WebSocket URL configuration
+    // In production: Use VITE_WS_URL environment variable (e.g., wss://truth-and-dare-2.onrender.com/ws)
+    // In development: Use localhost
+    // Default: Use same protocol/host as current page + /ws
+    const getWebSocketUrl = () => {
+      const envUrl = import.meta.env.VITE_WS_URL
+      if (envUrl) {
+        return envUrl
+      }
+      
+      // Detect if we're on localhost for development
+      const isLocalhost = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1'
+      
+      if (isLocalhost) {
+        return 'http://localhost:8080/ws'
+      }
+      
+      // For production: Use same protocol/host as current page
+      // Automatically uses wss:// if page is https://
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+      const host = window.location.host
+      return `${protocol}//${host}/ws`
+    }
+    
+    const wsUrl = getWebSocketUrl()
     
     // Create STOMP client with SockJS
     // Note: When using webSocketFactory, do NOT use brokerURL

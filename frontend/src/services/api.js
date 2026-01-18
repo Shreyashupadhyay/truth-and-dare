@@ -1,5 +1,19 @@
-// Use environment variable or default to relative path (same origin in production)
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+// API Base URL configuration
+// In production: Use VITE_API_URL environment variable (e.g., https://truth-and-dare-2.onrender.com/api)
+// In development: Use relative path /api (proxied by Vite)
+// Default: Use relative path (works if frontend and backend are on same domain)
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL
+  if (envUrl) {
+    // Remove trailing slash if present
+    return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl
+  }
+  
+  // Default to relative path (works for same-domain deployment)
+  return '/api'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 /**
  * API service for backend communication

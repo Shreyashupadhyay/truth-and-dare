@@ -1,0 +1,22 @@
+services:
+  # Frontend Static Site
+  - type: web
+    name: truth-dare-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    # If frontend is in a subdirectory, uncomment:
+    # rootDir: frontend
+    envVars:
+      - key: VITE_API_URL
+        value: https://truth-and-dare-2.onrender.com/api
+        # Update this with your actual backend URL!
+      - key: VITE_WS_URL
+        value: wss://truth-and-dare-2.onrender.com/ws
+        # Update this with your actual backend URL!
+        # Must use wss:// for HTTPS
+    autoDeploy: true
+
+# Note: If you're deploying from a monorepo, you may need to:
+# - Set rootDir to 'frontend'
+# - Or deploy frontend from a separate repository/branch
