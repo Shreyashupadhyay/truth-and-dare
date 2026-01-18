@@ -11,33 +11,35 @@ RUN chmod +x gradlew
 # Copy build configuration files
 COPY build.gradle settings.gradle ./
 
-# Copy gradle wrapper configuration (if present)
-COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/ 2>/dev/null || \
-    (mkdir -p gradle/wrapper && \
-     echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties && \
-     echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties && \
-     echo "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.14.3-bin.zip" >> gradle/wrapper/gradle-wrapper.properties && \
-     echo "networkTimeout=10000" >> gradle/wrapper/gradle-wrapper.properties && \
-     echo "validateDistributionUrl=true" >> gradle/wrapper/gradle-wrapper.properties && \
-     echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties && \
-     echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties)
+# Create gradle wrapper directory
+RUN mkdir -p gradle/wrapper
 
-# Copy gradle wrapper JAR if it exists, otherwise it will be downloaded
-COPY gradle/wrapper/gradle-wrapper.jar gradle/wrapper/ 2>/dev/null || echo "Wrapper JAR will be downloaded"
-
-# Copy source code
+# Copy source code (do this before wrapper files to optimize caching)
 COPY src/ src/
 
+# Copy gradle wrapper directory (includes both properties and JAR if they exist)
+# The build will continue even if files are missing - we'll handle that in RUN
+COPY gradle/wrapper/ gradle/wrapper/
+
 # Build the application
-# Since we're in a gradle image, we have gradle installed
-# First, ensure wrapper is available (download if missing)
+# If wrapper JAR is missing, the gradle wrapper command will download it
 RUN if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then \
-        echo "Downloading Gradle wrapper JAR..." && \
+        echo "Gradle wrapper JAR not found in repository, downloading..." && \
+        if [ ! -f gradle/wrapper/gradle-wrapper.properties ]; then \
+            echo "Creating wrapper properties file..." && \
+            echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties && \
+            echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties && \
+            echo "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.14.3-bin.zip" >> gradle/wrapper/gradle-wrapper.properties && \
+            echo "networkTimeout=10000" >> gradle/wrapper/gradle-wrapper.properties && \
+            echo "validateDistributionUrl=true" >> gradle/wrapper/gradle-wrapper.properties && \
+            echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties && \
+            echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties; \
+        fi && \
         gradle wrapper --gradle-version 8.14.3 --no-daemon; \
     fi && \
     ./gradlew clean bootJar -x test --no-daemon -x buildFrontend
 
-# Verify JAR was created and show its name
+# Verify JAR was created and copy it
 RUN ls -la build/libs/ && \
     JAR_FILE=$(ls build/libs/*.jar | grep -v sources | grep -v javadoc | head -1) && \
     echo "JAR file: $JAR_FILE" && \
