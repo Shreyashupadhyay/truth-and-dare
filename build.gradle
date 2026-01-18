@@ -1,0 +1,81 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.9'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.truthdare'
+version = '0.0.1-SNAPSHOT'
+description = 'Truth and Dare Game Backend'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' // For WebClient
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// Task to build frontend
+task buildFrontend(type: Exec) {
+	group = 'build'
+	description = 'Build React frontend'
+	workingDir = file('frontend')
+	
+	doFirst {
+		println 'Building React frontend...'
+	}
+	
+	commandLine = ['npm', 'install']
+	
+	doLast {
+		exec {
+			commandLine = ['npm', 'run', 'build']
+		}
+		
+		// Copy frontend build to static resources
+		println 'Copying frontend build to static resources...'
+		copy {
+			from 'frontend/dist'
+			into 'src/main/resources/static'
+		}
+		println 'Frontend build complete!'
+	}
+}
+
+// Make build depend on frontend build
+processResources.dependsOn buildFrontend
+
+// Clean task should also clean frontend
+task cleanFrontend(type: Delete) {
+	delete 'frontend/node_modules'
+	delete 'frontend/dist'
+	delete 'src/main/resources/static'
+}
+
+clean.dependsOn cleanFrontend

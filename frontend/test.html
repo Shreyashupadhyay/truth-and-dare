@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .test-box {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 600px;
+            margin: 100px auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .success {
+            color: green;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .error {
+            color: red;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1>🔍 React Test Page</h1>
+        <p>If you see this page, your HTML is loading correctly.</p>
+        
+        <div id="root-test">
+            <p class="error">React is NOT loading. Check console for errors.</p>
+        </div>
+        
+        <hr style="margin: 30px 0;">
+        
+        <h2>Debugging Steps:</h2>
+        <ol style="text-align: left; max-width: 500px; margin: 0 auto;">
+            <li>Open browser console (F12)</li>
+            <li>Check for JavaScript errors</li>
+            <li>Verify that <code>main.jsx</code> is loading</li>
+            <li>Make sure you're running <code>npm run dev</code></li>
+        </ol>
+        
+        <p style="margin-top: 30px;">
+            <strong>Expected URL:</strong> http://localhost:3000
+        </p>
+    </div>
+
+    <script>
+        console.log('test.html loaded');
+        console.log('Root element exists:', !!document.getElementById('root-test'));
+        
+        // Test if React would load
+        const testRoot = document.getElementById('root-test');
+        if (testRoot) {
+            testRoot.innerHTML = '<p class="success">✅ HTML is working! JavaScript is running!</p>';
+        }
+    </script>
+</body>
+</html>

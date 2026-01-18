@@ -1,0 +1,143 @@
+.game-room {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.room-header h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.room-status,
+.game-mode {
+  color: #666;
+  margin: 5px 0;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.status-badge.waiting {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.players-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.player-item {
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.player-item.current {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.05);
+}
+
+.player-name {
+  font-weight: 600;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+  background: #6c757d;
+  color: white;
+}
+
+.current-badge {
+  background: #28a745;
+}
+
+.question-card {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.question-card h3 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.question {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.question-type {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.question.truth .question-type {
+  color: #667eea;
+}
+
+.question.dare .question-type {
+  color: #f5576c;
+}
+
+.question-text {
+  font-size: 1.3em;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.question-for {
+  color: #666;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+.admin-badge {
+  background: #ffc107;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.game-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}

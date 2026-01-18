@@ -1,0 +1,86 @@
+.admin-panel {
+  margin-top: 20px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.admin-controls {
+  border-top: 2px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+.admin-section {
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-section:last-child {
+  border-bottom: none;
+}
+
+.admin-section h4 {
+  margin-bottom: 16px;
+  color: #555;
+}
+
+.admin-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.admin-section textarea:focus {
+  border-color: #667eea;
+}
+
+.game-mode-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.admin-info {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.admin-info p {
+  margin: 8px 0;
+  font-size: 0.9em;
+}
+
+.admin-info strong {
+  color: #333;
+}
+
+.info-note {
+  color: #856404;
+  background: #fff3cd;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 0.85em;
+}

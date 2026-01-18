@@ -1,0 +1,32 @@
+services:
+  # Backend Spring Boot Service
+  - type: web
+    name: truth-dare-backend
+    env: java
+    buildCommand: ./gradlew build
+    startCommand: java -jar build/libs/*.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 8080
+      # Set your frontend URL here (will be provided after frontend deployment)
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://your-frontend-domain.onrender.com
+      - key: LOG_LEVEL
+        value: INFO
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  # Frontend React Service (if deploying separately)
+  # Uncomment if you want to deploy frontend separately
+  # - type: web
+  #   name: truth-dare-frontend
+  #   env: static
+  #   buildCommand: cd frontend && npm install && npm run build
+  #   staticPublishPath: frontend/dist
+  #   envVars:
+  #     - key: VITE_API_URL
+  #       value: https://your-backend-url.onrender.com/api
+  #     - key: VITE_WS_URL
+  #       value: wss://your-backend-url.onrender.com/ws
